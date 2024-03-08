@@ -60,18 +60,21 @@ export const deletePr = async(req, res)=>{
 
 //revisar xq no jala :(
 //Ya jalo siuu
-export const search = async(req, res) => {
+export const search = async (req, res) => {
     try {
-        let { search } = req.body
-        let products = await Products.find({name: search})
-        if(!products) return res.status(404).send({message: 'Product not found'})
-        return res.send({message: 'Product found', products})
+        let { search } = req.body;
+        let products = await Products.find({ name: { $regex: search, $options: 'i' } });
+        
+        if (products.length === 0) {
+            return res.status(404).send({ message: 'Product not found' });
+        }
+        
+        return res.send({ message: 'Product found', products });
     } catch (err) {
-        console.error(err)
-        return res.status(500).send({message: 'Error searching products'})
+        console.error(err);
+        return res.status(500).send({ message: 'Error searching products' });
     }
 }
-
 export const catalogue = async (req, res) => {
     try {
         let data = await Products.find().populate('category')
