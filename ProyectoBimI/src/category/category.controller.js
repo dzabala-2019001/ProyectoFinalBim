@@ -78,8 +78,29 @@ export const deleteC = async(req, res)=>{
         let deletedCategory = await Category.findOneAndDelete({_id: id});
         if(!deletedCategory) return res.status(404).send({message: 'Category not found and not deleted'}); 
         return res.send({message: `Category with name ${deletedCategory.name} deleted successfully`});
+
     } catch (err) {
         console.error(err);
         return res.status(500).send({message: 'Error deleting Category'});
     }
 }
+
+export const defaultCategory = async (req, res) => {
+    try {
+        const categoryExist = await Category.findOne({ name: 'default' })
+
+        if (categoryExist) {
+            return console.log('default')
+        }
+        let data = {
+            name: 'default',
+            description: 'default'
+        }
+        let category = new Category(data)
+        await category.save()
+        console.log(data)
+    } catch (err) {
+        console.error(err)
+    }
+}
+

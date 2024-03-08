@@ -107,3 +107,5 @@ export const exhausted = async (req, res) => {
         return res.status(500).send({ message: 'the information cannot be brought' })
     }
 }
+
+

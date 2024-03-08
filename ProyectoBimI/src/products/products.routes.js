@@ -14,4 +14,5 @@ api.put('/updateP/:id', [validateJwt],isAdmin,updateP)
 api.get('/catalogue', catalogue)
 api.get('/exhausted', exhausted)
 
+
 export default api

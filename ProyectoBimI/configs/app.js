@@ -9,7 +9,7 @@ import { config } from "dotenv"
 import userRoutes from '../src/user/user.routes.js'
 import productsRoutes from '../src/products/products.routes.js'
 import categoryRoutes from '../src/category/category.routes.js'
-import cartRoutes from '../src/carrito/cart.routes.js'
+import cartRoutes from '../src/cart/cart.routes.js'
 
 
 const app = express()

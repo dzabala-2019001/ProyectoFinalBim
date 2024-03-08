@@ -62,7 +62,8 @@ export const loginU = async (req, res) => {
             let loggedUser = {
                 uid: log._id,
                 username: log.username,
-                name: log.name
+                name: log.name,
+                role: log.role
             };
             // Genera un token de autenticación
             let token = await generarjwt(loggedUser);
@@ -98,17 +99,19 @@ export const updateU = async(req, res)=>{
     }
 }
 
-export const deleteUs = async(req, res)=>{
+
+export const deleteUs = async (req, res) => {
     try {
-        let data = req.body
-        data._id = req.user._id
-        let user = await User.findOne({_id: data._id});
-        if (!user) return res.status(401).send({ message: 'User not found' })
-        let deletedAccount = await User.findOneAndDelete({ _id: data._id })
-        if (!deletedAccount) return res.status(404).send({ message: 'Account not found and not deleted' })
-        return res.send({ message: `Account ${deletedAccount.username} deleted successfully` })
+        let data = req.body;
+        data._id = req.user._id;
+        let user = await User.findOne({ _id: data._id });
+        if (!user) return res.status(401).send({ message: 'User not found' });
+
+        let deletedAccount = await User.findOneAndDelete({ _id: data._id });
+        if (!deletedAccount) return res.status(404).send({ message: 'Account not found and not deleted' });
+        return res.send({ message: `Account ${deletedAccount.username} deleted successfully` });
     } catch (error) {
-        console.error(error)
-        return res.status(500).send({ message: 'FAIL deleting' })
+        console.error(error);
+        return res.status(500).send({ message: 'FAIL deleting' });
     }
 }

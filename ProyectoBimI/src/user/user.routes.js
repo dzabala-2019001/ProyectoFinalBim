@@ -6,7 +6,7 @@ const api = express.Router();
 
 //Rutas publicas
 api.post('/registerU', registerU)
-api.post('/registerA',[validateJwt], registerA)
+api.post('/registerA', registerA)
 api.post('/loginU', loginU)
 
 
