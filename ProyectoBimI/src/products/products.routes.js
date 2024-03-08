@@ -1,5 +1,5 @@
 import express from 'express'
-import { catalogue, deletePr, exhausted, registerP, search, searchCategoy, test, updateP } from './products.controller.js';
+import { catalogue, deletePr, exhausted, obtenerProductosMasVendidos, registerP, search, searchCategoy, test, updateP } from './products.controller.js';
 import { validateJwt, isAdmin } from '../../middlewares/validate-jwt.js'
 
 
@@ -13,6 +13,8 @@ api.post('/searchCategoy', searchCategoy)
 api.put('/updateP/:id', [validateJwt],isAdmin,updateP)
 api.get('/catalogue', catalogue)
 api.get('/exhausted', exhausted)
+api.get('/obtenerProductosMasVendidos', obtenerProductosMasVendidos)
+
 
 
 export default api
