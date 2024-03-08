@@ -104,7 +104,7 @@ export const searchCategoy = async (req, res)=>{
 
 export const exhausted = async (req, res) => {
     try {
-        let data = await Products.findOne({ stock: 0 }).populate('category')
+        let data = await Products.find({ stock: 0 }).populate('category')
         if (!data) return res.status(444).send({ message: "there are no products out of stock" })
         return res.send({ data })
     } catch (error) {

@@ -98,6 +98,8 @@ export const deleteC = async (req, res) => {
     }
 }
 
+//crea la caategoria por defecto
+
 export const defaultCategory = async (req, res) => {
     try {
         const categoryExist = await Category.findOne({ name: 'default' })
