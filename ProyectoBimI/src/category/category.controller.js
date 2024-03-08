@@ -72,16 +72,29 @@ export const searchC = async(req, res) => {
     }
 }
 
-export const deleteC = async(req, res)=>{
+export const deleteC = async (req, res) => {
     try {
-        let { id } = req.params;
-        let deletedCategory = await Category.findOneAndDelete({_id: id});
-        if(!deletedCategory) return res.status(404).send({message: 'Category not found and not deleted'}); 
-        return res.send({message: `Category with name ${deletedCategory.name} deleted successfully`});
+        const { id } = req.params;
+        
+        // Eliminar la categoría
+        const deletedCategory = await Category.findOneAndDelete({ _id: id });
+        if (!deletedCategory) {
+            return res.status(404).send({ message: 'Category not found and not deleted' });
+        }
+        
+        // Encontrar la nueva categoría
+        const cambio = await Category.findOne({ _id: { $ne: id } });
+        
+        // Actualizar los productos con la nueva categoría
+        await Product.updateMany(
+            { category: id },
+            { $set: { category: cambio._id } }
+        );
 
+        return res.send({ message: `Category with name ${deletedCategory.name} deleted successfully` });
     } catch (err) {
         console.error(err);
-        return res.status(500).send({message: 'Error deleting Category'});
+        return res.status(500).send({ message: 'Error deleting Category' });
     }
 }
 
