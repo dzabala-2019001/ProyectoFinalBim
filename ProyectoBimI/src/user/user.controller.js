@@ -3,7 +3,7 @@
 import User from './user.model.js'
 import { generarjwt } from '../utils/jwt.js'
 import { encrypt, checkPassword, checkUpdateU } from '../utils/validator.js'
-
+import Buy from '../bill/bill.model.js'
 
 export const testU = (req, res)=>{
     console.log('test is running')
@@ -67,8 +67,11 @@ export const loginU = async (req, res) => {
             };
             // Genera un token de autenticación
             let token = await generarjwt(loggedUser);
-            return res.send({ message: `Welcome ${loggedUser.name}`, loggedUser, token });
-        } else {
+            
+            let buys = await Buy.find({ user: log._id }).populate('products', 'name');
+
+            return res.send({ message: `Welcome ${loggedUser.name}`, loggedUser, token, buys });
+        } else { 
             // Si no se encuentra un usuario o la contraseña es incorrecta, devuelve un mensaje de error
             return res.status(404).send({ message: 'Incorrect username/email or password' });
         }
