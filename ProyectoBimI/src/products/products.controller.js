@@ -64,7 +64,7 @@ export const deletePr = async(req, res)=>{
 export const search = async (req, res) => {
     try {
         let { search } = req.body;
-        let products = await Products.find({ name: { $regex: search, $options: 'i' } });
+        let products = await Products.find({ name: { $regex: search, $options: 'i' } }).populate('category');
         
         if (products.length === 0) {
             return res.status(404).send({ message: 'Product not found' });

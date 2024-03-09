@@ -94,31 +94,49 @@ export const generateInvoicePDF = async (bill) => {
 
         doc.pipe(fs.createWriteStream(pdfPath));
 
-        // Encabezado
-        doc.fontSize(20).text('DATOS', { align: 'center' }).moveDown();
-        doc.fontSize(14).text(`Bill ID: ${bill._id}`, { align: 'left' }).moveDown();
+        // Estilo y diseño
+        doc.font('Helvetica-Bold').fontSize(24).text('FACTURA', { align: 'center' }).moveDown(0.5);
+        doc.font('Helvetica').fontSize(12);
 
-        // Obtener información del usuario
+        // Información de la factura
+        doc.text(`Número de Factura: ${bill._id}`).moveDown(0.5);
+        doc.text(`Fecha: ${new Date().toLocaleDateString()}`).moveDown(1);
+
+        // Detalles del cliente
         const user = await User.findById(bill.user);
         if (user) {
-            doc.fontSize(14).text(`User: ${user.name}`, { align: 'left' }).moveDown(); 
+            doc.text(`Cliente: ${user.name}`).moveDown(1);
+            doc.text(`Email: ${user.email}`).moveDown(1);
         }
 
-        doc.fontSize(14).text(`Total Amount: ${bill.amount}`, { align: 'left' }).moveDown();
-
         // Lista de productos
-        doc.fontSize(16).text('Items:', { align: 'left' }).moveDown();
+        doc.moveDown(1);
+        doc.font('Helvetica-Bold').text('Descripción', { width: 200, align: 'left' });
+        
         
         if (Array.isArray(bill.products)) { 
             for (const item of bill.products) { 
                 const product = await Product.findById(item.product);
                 if (product) {
-                    doc.fontSize(12).text(`Product: ${product.name}, Quantity: ${item.quantity}, Price: ${item.unitPrice}`, { align: 'left' }).moveDown();
+                    doc.fontSize(12).text(` 
+            Product: ${product.name}, 
+            Quantity: ${item.quantity}, 
+            Price: Q ${item.unitPrice.toFixed(2)}`).moveDown();
                 }
             }
         } else {
             console.error('Error: bill.products is not an array');
         }
+
+
+        // Total Amount
+        const totalAmount = bill.products.reduce((total, item) => total + (item.quantity * item.unitPrice), 0);
+        doc.moveDown(1);
+        doc.font('Helvetica-Bold').text(`Total Amount: Q ${totalAmount.toFixed(2)}`, { align: 'right' });
+
+        // Pie de página
+        doc.moveDown(2);
+        doc.fontSize(10).text('Gracias por su compra', { align: 'center' });
 
         doc.end();
 

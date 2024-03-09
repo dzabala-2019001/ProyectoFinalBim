@@ -115,3 +115,18 @@ export const deleteUs = async (req, res) => {
         return res.status(500).send({ message: 'FAIL deleting' });
     }
 }
+
+export const deleteAdmin = async (req, res)=>{
+    try {
+        let { id } = req.params
+        let { validate} = req.body
+        if (!validate) return res.status(400).send({ message: 'Write authorization word' });
+        if (validate !== 'DELETE') return res.status(400).send({ message: 'Authorization word = DELETE' });
+        let deletedUser = await User.findOneAndDelete({_id: id}) 
+        if(!deletedUser) return res.status(404).send({message: 'Account not found and not deleted'})
+        return res.send({message: `Account with username ${deletedUser.username} deleted successfully`})
+    } catch (err) {
+        console.error(err)
+    return res.status(500).send({ message: 'Error deleting account' })
+    }
+}
